@@ -183,7 +183,7 @@ function UserPage() {
 
             </nav>
 
-            <Offcanvas show={show} onHide={() => setShow(false)}>
+            <Offcanvas placement = 'end' show={show} onHide={() => setShow(false)}>
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Notifications</Offcanvas.Title>
         </Offcanvas.Header>

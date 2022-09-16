@@ -531,7 +531,7 @@ export default function TempTasks(){
 
 
         <Modal show={updatemodalShow[task.id]}
-        onHide = {() => closeupdatemodalShow(false)} size="lg"
+        onHide = {() => closeupdatemodalShow(task.id)} size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered>
       <Modal.Header closeButton>

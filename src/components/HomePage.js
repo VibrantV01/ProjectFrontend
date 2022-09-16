@@ -7,12 +7,13 @@ import PasswordResetRequest from './PasswordResetRequest';
 
 function HomePage() {
     
+    
         return (
-            <div>
+            <div className = "HomePage">
             <nav>
-                <Link to = '/login'>Login</Link> | {' '}
-                <Link to = '/register'>Register</Link> | {' '}
-                <Link to = '/PasswordResetRequest'>Forgot Password?</Link>
+                <Link to = '/login'  style={{ textDecoration: 'none' }}>Login</Link> | {' '}
+                <Link to = '/register'   style={{ textDecoration: 'none' }}>Register</Link> | {' '}
+                <Link to = '/PasswordResetRequest'   style={{ textDecoration: 'none' }}>Forgot Password?</Link>
             </nav>
             <h1>Welcome!</h1>
             </div>

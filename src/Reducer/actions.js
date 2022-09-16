@@ -1,13 +1,14 @@
 import React from 'react';
-import { showUsers } from './userSlice';
+import { showUsers, currentpage, lastpage } from './userSlice';
 import Authservice from '../services/Authservice';
-import {addTasks, removeTasks} from './taskSlice';
+import {addTasks, removeTasks, setcurrentPage, setStats, setlastPage} from './taskSlice';
 import {login, logout, removeUsers} from './userSlice';
+import { addNotifs } from './NotificationSlice';
 
 //Action creator for registering
-export const create = (data) => async (dispatch) => {
+export const create = (data, token) => async (dispatch) => {
     try {
-        const response = await Authservice.create(data);
+        const response = await Authservice.create(data, token);
         console.log(response);
         return response;
     } catch(error) {
@@ -40,10 +41,13 @@ export const Logout = (token) => async(dispatch) => {
 }
 
 //Action creator for showUser
-export const showUser = (token) => async(dispatch) => {
+export const showUser = (token, page) => async(dispatch) => {
     try {
-        const response = await Authservice.showUser(token);
-        dispatch(showUsers(response.data));
+        const response = await Authservice.showUser(token, page);
+        console.log(response.data);
+        dispatch(showUsers(response.data.data));
+        dispatch(currentpage(response.data.current_page));
+        dispatch(lastpage(response.data.last_page));
     } catch (error) {
         console.log(error);
     }
@@ -65,6 +69,16 @@ export const showUser = (token) => async(dispatch) => {
 
 //     }
 // } 
+
+export const deleteTaskS = (userID, ids, token) => async(dispatch) => {
+    try {
+        
+        const response = await Authservice.deletebulktask(userID, ids, token);
+        
+    } catch(error) {
+        console.log(error);
+    }
+}
 
 
 //Action creator for verifymail 
@@ -108,9 +122,9 @@ export const createTask = (data) => async(dispatch) => {
 
 
 //Action creator for delete task 
-export const deleteTask = (taskid, userID) => async(dispatch) => {
+export const deleteTask = (taskid, userID, token) => async(dispatch) => {
     try {
-        const response = await Authservice.deletetask(taskid, userID);
+        const response = await Authservice.deletetask(taskid, userID, token);
         return response;
     } catch (error) {
         console.log(error);
@@ -118,9 +132,19 @@ export const deleteTask = (taskid, userID) => async(dispatch) => {
 }
 
 
-export const deleteUsers = (userID) => async(dispatch) => {
+export const deleteUsers = (userID, token, id) => async(dispatch) => {
     try {
-        const response = await Authservice.deleteuser(userID);
+        const response = await Authservice.deleteuser(userID, token, id);
+        return response;
+    } catch(error) {
+        console.log(error);
+    }
+}
+
+
+export const deleteUSERS = (Ids, token) => async(dispatch) => {
+    try {
+        const response = await Authservice.deleteUsers(Ids, token);
         return response;
     } catch(error) {
         console.log(error);
@@ -159,24 +183,26 @@ export const updateuser = (data, userID) => async(dispatch) => {
 }
 
 
-export const createUser = (data) => async(dispatch) => {
+export const createUser = (data, token) => async(dispatch) => {
     try {
-        const response = await Authservice.createuser(data);
+        const response = await Authservice.createuser(data, token);
         return response;
     } catch (error) {
         console.log(error);
     }
 }
 
-export const showtask = (role, userID) => async(dispatch) => {
+export const showtask = (role, userID, token, page) => async(dispatch) => {
     try {
-        const response = await Authservice.showtasks(role, userID);
+        const response = await Authservice.showtasks(role, userID, token, page);
         dispatch(addTasks(
             {
                 id : userID,
-                tasks: response.data,
+                tasks: response.data.data,
             }
         ));
+        dispatch(setcurrentPage(response.data.current_page));
+        dispatch(setlastPage(response.data.last_page));    
         return response;
     } catch (error) {
         console.log(error);
@@ -184,10 +210,20 @@ export const showtask = (role, userID) => async(dispatch) => {
 }
 
 
-export const searchText = (input) => async(dispatch) => {
+export const searchText = (input, token, page) => async(dispatch) => {
     try {
-        const response = await Authservice.searchtext(input);
-        dispatch(showUsers(response.data));
+        const response = await Authservice.searchtext(input, token, page);
+        if (input != ''){
+            dispatch(showUsers(response.data.data));
+            dispatch(currentpage(response.data.current_page));
+            dispatch(lastpage(response.data.last_page));    
+
+        } else {
+            dispatch(showUsers(response.data.data));
+            dispatch(currentpage(response.data.current_page));
+            dispatch(lastpage(response.data.last_page));    
+
+        }
         return response;
     } catch(error) {
         console.log(error);
@@ -195,15 +231,18 @@ export const searchText = (input) => async(dispatch) => {
 }
 
 
-export const searchTask = (role, userID, input) => async(dispatch) => {
+export const searchTask = (role, userID, input, token, page) => async(dispatch) => {
     try {
-        const response = await Authservice.searchtask(role, userID, input);
+        const response = await Authservice.searchtask(role, userID, input, token, page);
         dispatch(addTasks(
             {
                 id : userID,
-                tasks: response.data,
+                tasks: response.data.data,
             }
         ));
+        dispatch(setcurrentPage(response.data.current_page));
+        dispatch(setlastPage(response.data.last_page));    
+
         return response;
     } catch (error) {
         console.log(error);
@@ -211,10 +250,13 @@ export const searchTask = (role, userID, input) => async(dispatch) => {
 }
 
 
-export const filterRole = (role) => async(dispatch) => {
+export const filterRole = (role, token, page) => async(dispatch) => {
     try {
-        const response = await Authservice.filterrole(role);
-        dispatch(showUsers(response.data));
+        const response = await Authservice.filterrole(role, token, page);
+        dispatch(showUsers(response.data.data));
+        dispatch(currentpage(response.data.current_page));
+        dispatch(lastpage(response.data.last_page));    
+
     } catch (error) {
         console.log(error);
     }
@@ -222,15 +264,19 @@ export const filterRole = (role) => async(dispatch) => {
 
 
 
-export const sorttask = (field, order, userID, role) => async(dispatch) => {
+export const sorttask = (field, order, userID, role, token, page) => async(dispatch) => {
     try {
-        const response = await Authservice.sorttask(field, order, userID, role);
+        const response = await Authservice.sorttask(field, order, userID, role, token, page);
         dispatch(addTasks(
             {
                 id: userID,
-                tasks: response.data,
+                tasks: response.data.data,
             }
-        ))
+        ));
+        dispatch(setcurrentPage(response.data.current_page));
+        dispatch(setlastPage(response.data.last_page));    
+
+
         return response;
     } catch (error) {
         console.log(error);
@@ -238,17 +284,60 @@ export const sorttask = (field, order, userID, role) => async(dispatch) => {
 
 }
 
-export const filterTask = (field, value, userID, role) => async(dispatch) => {
+export const filterTask = (field, value, userID, role, token, page) => async(dispatch) => {
     try {
-        const response = await Authservice.filtertask(field, value, userID, role);
+        const response = await Authservice.filtertask(field, value, userID, role, token, page);
         dispatch(addTasks(
             {
                 id: userID,
-                tasks: response.data,
+                tasks: response.data.data,
             }
-        ))
+        ));
+        dispatch(setcurrentPage(response.data.current_page));
+        dispatch(setlastPage(response.data.last_page));    
+
+
         return response;
     } catch (error) {
+        console.log(error);
+    }
+}
+
+
+export const createStats = (userID, token) => async(dispatch) => {
+    try {
+        const response = await Authservice.completestats(userID, token);
+        dispatch(setStats(response.data));
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+export const listnotifications = (token) => async(dispatch) => {
+    try {
+        const response = await Authservice.listNotification(token);
+        dispatch(addNotifs(response.data));
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+export const deletenotification = (id, token) => async(dispatch) => {
+    try {
+        const response = await Authservice.deleteNotification(id, token);
+    } catch(error) {
+        console.log(error);
+    }
+}
+
+
+export const clearnotifications = (token) => async(dispatch) => {
+    try {
+        const response = await Authservice.clearNotifications(token);
+    } catch(error) {
         console.log(error);
     }
 }

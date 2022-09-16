@@ -20,17 +20,10 @@ function VerifyEmail(){
         }
     }
     dispatch(verifyemail(config));
-    // axios.post('http://localhost:8002/email/verify', null,config).then(
-    //     (response) => {
-    //         console.log(response);
-    //     },
-    //     (error) => {
-    //         console.log(error);
-    //     }
-    // )
+    
 
     return (
-        <div>
+        <div className = "EmailVerified">
             <h1>Yay! Email Verified!</h1>
             <h3>Please login again</h3>
             <button onClick = {() => {

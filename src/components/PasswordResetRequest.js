@@ -15,7 +15,6 @@ function PasswordResetRequest(){
         let data = {
             email,
         }
-        // axios.post('http://localhost:8002/password/reset-request', data);
         dispatch(password_resetmail(data)).then(
             navigate('/', {replace: true}),
         )
@@ -25,7 +24,7 @@ function PasswordResetRequest(){
     }
 
     return (
-        <form onSubmit = {handleClick}> 
+        <form onSubmit = {handleClick} className = "PasswordResetRequest"> 
             <h3>Please enter your email-id</h3>
             <input type = 'email' placeholder = 'Email'/>
             <button type = 'submit'>Submit</button>

@@ -3,8 +3,15 @@ const API_URL = "http://localhost:8002/";
 
 
 
-const create =(data)=>{
-    return axios.post(API_URL + 'api/users', data);
+const create =(data, token)=>{
+    let config = {
+        params: {},
+        headers: {
+            Authorization: 'Bearer ' + token,
+        }
+    };
+    console.log(token);
+    return axios.post(API_URL + 'api/users', data, config);
 };
 
 
@@ -45,21 +52,22 @@ const createtask=(data)=>{
 };
 
 
-const deletetask=(taskid, userID)=>{
+const deletetask=(taskid, userID, token)=>{
     let data = {
         params: {
             userID,
         }
+        , headers: {Authorization: 'Bearer ' + token}
     }
     return axios.delete('http://localhost:8002/delete/' + taskid, data);
 };
 
 
-const showtasks = (role, userID) => {
+const showtasks = (role, userID, token, page) => {
     if (role === 'admin') {
-        return axios.get('http://localhost:8002/showtasks');
+        return axios.get('http://localhost:8002/showtasks', {params: {page: page}, headers: {Authorization: 'Bearer' + token}});
     } 
-    return axios.get('http://localhost:8002/showtasks/' + userID);
+    return axios.get('http://localhost:8002/showtasks/' + userID, {params: {page: page}, headers: {Authorization: 'Bearer' + token}});
 };
 
 
@@ -73,62 +81,101 @@ const edittask = (data, taskid) => {
 };
 
 
-const showUser = (token) => {
-    let config = {
-        param: {
-
-        }, 
-        headers: {
-            Authorization: 'Bearer ' + token,
-        }
-    }
-    return axios.get('http://localhost:8002/api/users', null, config);
+const showUser = (token, page) => {
+    return axios.get('http://localhost:8002/api/users', {params: {page: page}, headers: {Authorization: 'Bearer' + token}});
 }
 
 
-const deleteuser = (userID) => {
-    return axios.delete("http://localhost:8002/api/users/" + userID);
+const deleteuser = (userID, token, id) => {
+    return axios.delete("http://localhost:8002/api/users/" + userID, {params: {id: id}, headers: {Authorization: 'Bearer' + token}});
+}
+
+
+const deleteUsers = (Ids, token) => {
+    const data = {
+        params : {
+            Ids: Ids
+        }, headers: {Authorization: 'Bearer' + token}
+    }
+    return axios.delete('http://localhost:8002/api/deleteUsers',data);
 }
 
 const updateuser = (data, userID) => {
     return axios.put("http://localhost:8002/api/users/" + userID, null, data);
 } 
 
-const createuser = (data) => {
-    return axios.post('http://localhost:8002/api/users', data);
+const createuser = (data, token) => {
+    let config = {
+        params: {},
+        headers: {
+            Authorization: 'Bearer ' + token,
+        }
+    };
+    return axios.post('http://localhost:8002/api/users', data, token);
 }
 
-const searchtext = (input) => {
-    return axios.get('http://localhost:8002/search/' + input);
+const searchtext = (input, token,page) => {
+    if (input == ''){
+        return axios.get('http://localhost:8002/api/users', {params: {page: 1}, headers: {Authorization: 'Bearer' + token}});
+    }
+    return axios.get('http://localhost:8002/search/' + input, {params: {page: page}, headers: {Authorization: 'Bearer' + token}});
 }
 
-const searchtask = (role, userID, input) => {
+const searchtask = (role, userID, input, token, page) => {
     if (role === 'admin'){
-        return axios.get('http://localhost:8002/searchtask/' + input);
+        return axios.get('http://localhost:8002/searchtask/' + input, {params: {page: page}, headers: {Authorization: 'Bearer' + token}});
     } 
-    return axios.get('http://localhost:8002/searchtask/' + input + '/' + userID);
+    return axios.get('http://localhost:8002/searchtask/' + input + '/' + userID, {params: {page: page}, headers: {Authorization: 'Bearer' + token}});
 }
 
 
-const filterrole = (role) => {
-    return axios.get('http://localhost:8002/filterrole/' + role);
+const filterrole = (role, token, page) => {
+    return axios.get('http://localhost:8002/filterrole/role/' + role, {params: {page: page}, headers: {Authorization: 'Bearer' + token}});
 }
 
 
-const sorttask = (field, order, userID, role) => {
+const sorttask = (field, order, userID, role, token, page) => {
     if (role == 'admin'){
-        return axios.get('http://localhost:8002/sorttaskadmin/' + field + '/' + order);
+        return axios.get('http://localhost:8002/sorttaskadmin/' + field + '/' + order, {params: {page: page},headers: {Authorization: 'Bearer' + token}});
     } 
-    return axios.get('http://localhost:8002/sorttask/' + field + '/' + order + '/' + userID);
+    return axios.get('http://localhost:8002/sorttask/' + field + '/' + order + '/' + userID, {params: {page: page},headers: {Authorization: 'Bearer' + token}});
 }
 
 
-const filtertask = (field, value, userID, role) => {
+const filtertask = (field, value, userID, role, token, page) => {
     if (role == 'admin'){
-        return axios.get('http://localhost:8002/filtertaskadmin/' + field + '/' + value);
+        return axios.get('http://localhost:8002/filtertaskadmin/' + field + '/' + value, {params: {page: page},headers: {Authorization: 'Bearer' + token}});
     } 
-    return axios.get('http://localhost:8002/filtertask/' + field + '/' + value + '/' + userID);
+    return axios.get('http://localhost:8002/filtertask/' + field + '/' + value + '/' + userID, {params: {page: page},headers: {Authorization: 'Bearer' + token}});
 }
+
+
+
+const deletebulktask = (userID, ids, token, page) => {
+    let data = {ids : ids, userID: userID};
+    return axios.post('http://localhost:8002/deletebulktasks',data, {params: {page: page},headers: {Authorization: 'Bearer' + token}});
+}
+
+
+const completestats = (userID, token) => {
+    return axios.get('http://localhost:8002/statsOwner', {params: {id: userID}, headers: {Authorization: 'Bearer' + token}})
+}
+
+
+const listNotification = (token) => {
+    return axios.get('http://localhost:8002/listNotifs', {headers: {Authorization: 'Bearer' + token}});
+}
+
+const deleteNotification = (id, token) => {
+    return axios.delete('http://localhost:8002/notif/' + id, {headers: {Authorization: 'Bearer' + token}});
+}
+
+
+const clearNotifications = (token) => {
+    return axios.delete('http://localhost:8002/clear-notif', {headers: {Authorization: 'Bearer' + token}});
+}
+
+
 export default {
     create,
     Login,
@@ -150,4 +197,10 @@ export default {
     sorttask,
     createuser,
     filtertask,
+    deleteUsers,
+    deletebulktask,
+    completestats,
+    listNotification,
+    deleteNotification,
+    clearNotifications
 };

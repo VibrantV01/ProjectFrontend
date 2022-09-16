@@ -59,6 +59,7 @@
 }
 
 .sorting {
+  gap:10px;
   display:flex;
   justify-content: right;
 }
@@ -67,3 +68,129 @@
   display: flex;
   justify-content: right;
 }
+
+
+/* .DeleteUsers {
+  display: flex;
+  justify-content: right;
+} */
+
+
+.filtering {
+  display: flex;
+  margin-left: auto;
+}
+
+.sortingfiltering{
+  display: flex;
+  margin-bottom: 5px;
+  padding: 5px;
+}
+
+.dropDownHeading{
+  padding: 5px;
+}
+
+.dropDown{
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.searching{
+  /* //display: flex; */
+  padding:5px;
+}
+
+.searchingadmin{
+  padding: 5px;
+}
+
+.list{
+  padding:5px;
+}
+
+.createdelete{
+  display:flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.Navbar{
+  background-color: #282c34;
+  overflow: hidden;
+  /* height: 50px;
+  padding: 5px; */
+  margin-bottom: 5px;
+}
+
+.Navbar a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.Navbar a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+
+.DashBoard { 
+  background-color: #f4f0d1;
+  height:100vh;
+}
+
+.HomePage {
+  background-color: #f4f0d1;
+  height:100vh;
+}
+
+.Login {
+  background-color: #f4f0d1;
+  height:100vh;
+}
+
+.chart1 {
+  background-color: #f4f0d1;
+}
+
+.chart2 {
+  background-color: #f4f0d1;
+}
+
+.Register {
+  background-color: #f4f0d1;
+  height:100vh;
+}
+
+
+.PasswordReset {
+  background-color: #f4f0d1;
+  height:100vh;
+}
+
+.PasswordResetRequest {
+  background-color: #f4f0d1;
+  height:100vh;
+}
+
+.EmailVerified {
+  background-color: #f4f0d1;
+  height:100vh;
+}
+
+.Profile {
+  background-color: white;
+}
+
+
+/* .active{
+  background-color: #04AA6D;
+  height: 50px;
+} */
+
+
+
+

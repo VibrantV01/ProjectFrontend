@@ -12,12 +12,34 @@ import AdminTab from './AdminTab';
 import UserTask from './UserTask';
 import AdminTask from './AdminTask';
 import {showUser, showtask} from '../Reducer/actions';
-
+import { Chart } from "react-google-charts";
 
 
 function DashBoard() {
+    const task = useSelector(state=>state.tasks);
+    const user = useSelector(state => state.users);
+    let tasks = task.tasks;
+    let users = user.users;
+    useEffect(() => {
+        
+        dispatch(showtask(user.currentUser.user.role, user.currentUser.user.id)).then(
+            (response) => {
+                console.log('task updated');
+            }    
+        );
+        
+      }, []);
+
+
+      useEffect(() => {
+        dispatch(showUser(user.currentUser.access_token)).then(
+            (response) => {
+                console.log('user updated');
+            }
+        )
+      }, []);
+
         const navigate = useNavigate();
-        const user = useSelector(state => state.users);
         const dispatch = useDispatch();
         function handleClick(event){
             let token = user.currentUser.access_token;
@@ -59,27 +81,38 @@ function DashBoard() {
                 }
             )
         }
+
+        const data = [
+            ["Status", "Number of tasks"],
+            ["Completed", task.completedto],
+            ["Assigned", task.assignedto],
+            ["In progress", task.inprogressto],
+          ];
+          
+        const options = {
+            title: "Status of tasks assigned to you",
+            is3D: true,
+            legend:{position: 'right'},
+
+          };
+          
+          const data2 = [
+            ["Status", "Number of tasks"],
+            ["Completed", task.completedby],
+            ["Assigned", task.assignedby],
+            ["In progress", task.inprogressby],
+          ];
+    
+          const options2 = {
+            title: "Status of tasks assigned by you",
+            is3D: true,
+            legend:{position: 'left'},
+
+          };
+    
     
         return (
-            // <div>
-            //      <head>
-            //         <title>Pusher Test</title>
-            //         <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
-            //         <script>
-
-            //             // Enable pusher logging - don't include this in production
-            //             Pusher.logToConsole = true;
-
-            //             var pusher = new Pusher('7e4f96f1381b51749e6a', {
-            //             cluster: 'ap2'
-            //             });
-
-            //             var channel = pusher.subscribe('my-channel');
-            //             channel.bind('my-event', function(data) {
-            //             alert(JSON.stringify(data));
-            //             });
-            //         </script>
-            //         </head>
+            
             
 
 
@@ -89,12 +122,34 @@ function DashBoard() {
 
 
             <div>
+
             {user.currentUser.user.email_verified_at != null && 
             <div>
             <nav>
             <button onClick = {handleClick}>Logout</button>
             </nav>
             <h1>Welcome to your Page!</h1>
+            <div className = 'chart1'>
+            <Chart
+      chartType="PieChart"
+      data={data}
+      options={options}
+      width={"100%"}
+      loader={<div>Loading Chart</div>}
+      height={"400px"}
+        />
+        </div>
+        <div className = 'chart2'>
+         <Chart
+      chartType="PieChart"
+      data={data2}
+      options={options2}
+      width={"100%"}
+      loader={<div>Loading Chart</div>}
+      height={"400px"}
+      />
+        </div>
+        
             <Tabs defaultActiveKey = 'Profile'>
                 <Tab eventKey = 'Profile' title = 'Profile'>
                 <Card style={{ width: '18rem' }}>

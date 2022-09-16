@@ -5,28 +5,45 @@ import {useDispatch} from 'react-redux';
 import {showUsers, setUsers} from '../Reducer/userSlice';
 import Accordion from 'react-bootstrap/Accordion';
 import {showUser, searchText, filterRole} from '../Reducer/actions';
-import { Form } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import _ from 'lodash';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import Card from 'react-bootstrap/Card';
+import { Link } from 'react-router-dom';
 
 
 
-
-
-export default function UserTab(){
+export default function Users(){
     let user = useSelector(state => state.users);
-    let list;
+    const [page, setPage] = React.useState(1);
+    const [showpn, setShowpn] = useState(true);
     const dispatch = useDispatch();
     function handleSubmit(event){
         event.preventDefault();
-        dispatch(showUser(user.currentUser.access_token));
-
+        dispatch(showUser(user.currentUser.access_token, 1));
     }
+    const [loading, setLoading] = useState(false);
 
+    function clickNext(){
+        setLoading(true);
+        dispatch(showUser(user.currentUser.access_token, page + 1)).then(
+            setLoading(false)
+        );
+        setPage(page + 1);
+    }
+    function clickPrev(){
+        setLoading(true);
+        if (page > 1){
+            dispatch(showUser(user.currentUser.access_token, page - 1)).then(
+                setLoading(false),
+                setShowpn(true),
+            );
+            setPage(page - 1);
+        }
+    }
     const [open, setOpen] = useState(false);
     const [input, setInput] = useState('');
-    const [loading, setLoading] = useState(false);
     const inputRef = useRef();
       
         useEffect(() => {
@@ -37,9 +54,16 @@ export default function UserTab(){
       
         const onSearchText = (input) => {
             setLoading(true);
-            dispatch(searchText(input)).then(
+            setShowpn(false);
+            dispatch(searchText(input, user.currentUser.access_token)).then(
                 (response) => {
                     setLoading(false);
+                    if (input != ''){
+                        setShowpn(false);
+                    };
+                    if (input == ''){
+                        setShowpn(true);
+                      };
                 }
             );
         
@@ -58,19 +82,16 @@ export default function UserTab(){
       
     
         const handleRole = (event, role) => {
+            setShowpn(false);
             setLoading(true);
             event.preventDefault();
-            dispatch(filterRole(role)).then(
+            dispatch(filterRole(role, user.currentUser.access_token)).then(
                 setLoading(false),
             )
         }
 
     return (
         <div>
-        <Accordion>
-        <Accordion.Item eventKey = "Show all users">
-        <Accordion.Header onClick = {handleSubmit}>Show all users</Accordion.Header>    
-        <Accordion.Body>
             <div className = "dropDownHeading">
             <h6>Apply Filters</h6>
             </div>
@@ -89,6 +110,7 @@ export default function UserTab(){
       
     </DropdownButton>
     </div>
+    <div className = "searchingadmin">
         <Form>
                 <Form.Group controlId="search">
                   <Form.Control
@@ -100,27 +122,26 @@ export default function UserTab(){
                   />
             </Form.Group>  
         </Form>  
+        </div>
+        <div className = "list">
         {loading && <p>...Loading</p>}
         {loading == false && user.users.map((user) => (
             
-        <Accordion key = {user.id}>
-        <Accordion.Item eventKey= {JSON.stringify(user.id)}>
-            <Accordion.Header>{user.id}</Accordion.Header>
-            <Accordion.Body>
-            <p>ID = {user.id}</p>
-            <p>Name = {user.name}</p>
-            <p>Email = {user.email}</p>
-            <p>Role = {user.role}</p>
-            </Accordion.Body>
-        </Accordion.Item>
-        </Accordion>
+            <Card key = {user.id}>
+            <Card.Header>{user.id}</Card.Header>
+            <Card.Body>
+              <Card.Title><Link to = {`/UserPage/user/${user.id}`} style={{ textDecoration: 'none' }}>{user.name}</Link></Card.Title>
+              <Card.Text>
+                <p>Email: {user.email}</p>
+                {user.role == 'admin' && <p>Role: Admin</p>}
+                {user.role == 'normal' && <p>Role: Normal</p>}
+              </Card.Text>
+            </Card.Body>
+          </Card>
         
         ))}
-</Accordion.Body>        
-</Accordion.Item>
-</Accordion>    
-
         </div>
+    {showpn && <div><Button onClick = {(event) => {clickPrev(event)}}>Previous</Button> | {user.currentpage} | <Button onClick = {(event) => {clickNext(event)}}>Next</Button></div>}
+    </div>
     )
 }
-

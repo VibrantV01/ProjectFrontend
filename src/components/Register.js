@@ -32,19 +32,11 @@ function Register () {
             setShow(true);
         }
         
-        // axios.post('http://localhost:8002/api/users', data)
-        //  .then(
-        //      (response) => {
-        //         navigate('/Login', {replace:true});
-        //      }, 
-        //      (error) => {
-        //          console.log(error);
-        //      });
     }
 
     
         return (
-            <div>
+            <div className = "Register">
             <form className="register" onSubmit = {handleClick}>
                 <div>Register</div><br/>
                 <input type = 'name' placeholder = 'Name' /><br/>

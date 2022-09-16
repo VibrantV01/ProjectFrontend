@@ -23,23 +23,16 @@ function Login() {
         let data = {
             email, password
         }
-        dispatch(LogiN(data)).then((res)=>{
+        if (HUMAN === true){
+        dispatch(LogiN(data)).then(
+        (res)=>{
             console.log(res);
-            navigate('/Dashboard', {replace: true})
+            navigate('/UserPage', {replace: true})
         }
         );
-        // axios.post('http://localhost:8002/api/login', data).then (
-        //     (response) => {
-        //         if (response && response.data.access_token){
-        //             dispatch(login(response.data));
-        //             localStorage.setItem('user', JSON.stringify(response.data));
-        //             navigate('/Dashboard', {replace: true});
-        //         }
-        //     }, 
-        //     (error) => {
-        //         console.log(error);
-        //     }
-        // )
+    } else {
+        setShow(true);
+    }
 
         
 
@@ -47,7 +40,7 @@ function Login() {
 
     
     return  (
-            <div>
+            <div className = "Login">
                 <form className="login" onSubmit = {handleClick}>
                     <div>Login</div><br/>
                     <input type = 'email' placeholder = 'Email'  /><br/>

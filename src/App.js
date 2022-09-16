@@ -6,17 +6,26 @@ import {
   Routes,
   Route
 } from "react-router-dom";
+import useEffect from 'react';
 import HomePage from './components/HomePage';
 import DashBoard from './components/DashBoard';
 import VerifyEmail from './components/VerifyEmail';
 import PasswordResetRequest from './components/PasswordResetRequest';
 import PasswordReset from './components/PasswordReset';
-
-
-
+import UserPage from './components/UserPage';
+import Users from './components/Users';
+import Tasks from './components/Tasks';
+import UsersAdmin from './components/UsersAdmin';
+import Home from './components/Home';
+import User from './components/User';
+import TempTasks from './components/TempTasks';
+import TempUser from './components/TempUser';
+import TempUserAdmin from './components/TempUserAdmin';
+import Profile from './components/Profile';
 
 function App() {
 
+  
  
 
   return (
@@ -28,27 +37,35 @@ function App() {
     
       <Routes>
 
-        <Route exact path = "/login" element = {<Login/>}/>
+        <Route path = "/login" element = {<Login/>}/>
   
-        <Route exact path = "/logout" element = {<Register />} /> 
+        <Route path = "/logout" element = {<Register />} /> 
 
-        <Route exact path = "/register" element = {<Register />} />
+        <Route path = "/register" element = {<Register />} />
 
-        <Route exact path = "/" element = {<HomePage />} /> 
+        <Route path = "/" element = {<HomePage />} /> 
 
-        <Route exact path = "/DashBoard" element = {<DashBoard />}/>
+        <Route path = "/DashBoard" element = {<DashBoard />}/>
 
-        <Route exact path = "/PasswordResetRequest" element = {<PasswordResetRequest />}/>
+        <Route path = "/PasswordResetRequest" element = {<PasswordResetRequest />}/>
       
-
+        <Route path="UserPage" element={<UserPage />}>
+          <Route index element={<Home />} />
+          <Route path="Home" element={<Home />} />
+          <Route path="Users" element={<TempUser />} />
+          <Route path="UsersAdmin" element = {<TempUserAdmin/>} />
+          <Route path="Tasks" element = {<TempTasks/>}/>
+          <Route path="/UserPage/user/:id" element = {<User/>}/>
+          <Route path = "Profile" element = {<Profile/>}/>
+        </Route>
         <Route path = '*' element  = {
             <h1>This route doesn't exist, please check!</h1>
         } />
 
-        <Route exact path = '/email/verify' element = {<VerifyEmail/>}/>
+        <Route path = '/email/verify' element = {<VerifyEmail/>}/>
 
-        <Route exact path = '/password/reset' element = {<PasswordReset/>}/>
-
+        <Route path = '/password/reset' element = {<PasswordReset/>}/>
+        
 
       </Routes>  
       

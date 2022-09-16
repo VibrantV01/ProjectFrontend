@@ -23,14 +23,12 @@ function PasswordReset(){
         dispatch(password_reset(data)).then(
             navigate('/', {replace: true})
         )
-        // axios.post('http://localhost:8002/password/reset', data);
-        //  navigate('/', {replace: true});
 
     }
 
 
     return (
-        <form onSubmit = {handleSubmit}>
+        <form className = "PasswordReset" onSubmit = {handleSubmit}>
             <input type = 'password' placeholder = 'Password'/>
             <input type = 'password' placeholder = 'Password Confirmation'/>
             <button type = 'submit'>Submit</button>
